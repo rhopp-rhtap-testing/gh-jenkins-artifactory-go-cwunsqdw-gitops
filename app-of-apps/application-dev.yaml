@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gh-jenkins-artifactory-go-cwunsqdw-development
+  namespace: tssc-gitops
+  finalizers: ["resources-finalizer.argocd.argoproj.io"] 
+spec:
+  project: default
+  source:
+    path: ./components/gh-jenkins-artifactory-go-cwunsqdw/overlays/development
+    repoURL: https://github.com/rhopp-rhtap-testing/gh-jenkins-artifactory-go-cwunsqdw-gitops.git
+    targetRevision: main
+  destination:
+    namespace: tssc-app-development
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels: 
+        argocd.argoproj.io/managed-by: tssc-gitops
+    automated: 
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
